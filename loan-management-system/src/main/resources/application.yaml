@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+# Basic Auth credentials the Scoring Engine will use to call US
+lms:
+  security:
+    username: scoring_user
+    # Use a strong password, consider externalizing this in real apps
+    password: scoring_pwd_123!
+
+# Configuration for calling the Scoring Engine
+scoring:
+  api:
+    base-url: https://scoringtest.credable.io/api/v1
+    # IMPORTANT: Obtain this token by calling the createClient API manually
+    # after deploying YOUR service, providing YOUR endpoint URL and the credentials above.
+    # Store securely (e.g., env var, Vault) in real apps.
+    client-token: YOUR_GENERATED_UNIQUE_UUID_FROM_CREATE_CLIENT_API
+
+# Configuration for calling CBS (Mocked)
+cbs:
+  api:
+    username: admin
+    password: pwd123
+  kyc:
+    wsdl-url: https://kycapitest.credable.io/service/customerWsdl.wsdl
+  transaction:
+    wsdl-url: https://trxapitest.credable.io/service/transactionWsdl.wsdl
+
+# Retry configuration
+retry:
+  score-query:
+    max-attempts: 5
+    delay-ms: 5000 # 5 seconds
+
+# Async thread pool (Spring Boot defaults are often sufficient)
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+      thread-name-prefix: async-exec-
+  # Optional: Ensure YAML is preferred if both files exist (usually automatic)
+  # config:
+  #  activate:
+  #    on-profile: default
+
+# Logging (Example - customize as needed)
+logging:
+  level:
+    root: INFO
+    io.credable.lms: DEBUG # More detailed logs for our app code
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.retry: INFO

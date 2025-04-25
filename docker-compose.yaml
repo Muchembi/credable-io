@@ -1,0 +1,31 @@
+# docker-compose.yml (in root directory 'credable-io')
+services:
+  lms-app:
+    # Build the image using the Dockerfile in the current directory (.)
+    build:
+      context: loan-management-system
+      dockerfile: Dockerfile
+    image: credable/lms-application:latest # Optional: name the built image
+    container_name: lms-app # Define a specific container name
+    ports:
+      # Map port 8080 on the host to port 8080 in the container
+      - "8080:8080"
+    environment:
+      # --- CRITICAL CONFIGURATION ---
+      # Override application.yaml properties using environment variables
+      # MUST match the token obtained from the Scoring Engine's createClient API
+      - SCORING_API_CLIENT_TOKEN=GENERATED_UNIQUE_UUID_FROM_CREATE_CLIENT_API
+
+      # Enable/disable mocking for the scoring API calls
+      # Set to 'true' if the scoring endpoints are down (404)
+      # Set to 'false' to attempt real calls
+      - SCORING_API_MOCK_ENABLED=true # <-- SET TO true TO MOCK 404s
+
+      # Optional: Define the username/password for the scoring engine callback
+      # if you want to override the defaults in application.yaml
+      # - LMS_SECURITY_USERNAME=your_secure_user
+      # - LMS_SECURITY_PASSWORD=your_very_secure_password
+
+      # Optional: Set active Spring profiles if needed (e.g., prod, dev)
+      # - SPRING_PROFILES_ACTIVE=prod
+

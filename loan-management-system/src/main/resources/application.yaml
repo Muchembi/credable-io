@@ -16,6 +16,9 @@ scoring:
     # after deploying YOUR service, providing YOUR endpoint URL and the credentials above.
     # Store securely (e.g., env var, Vault) in real apps.
     client-token: YOUR_GENERATED_UNIQUE_UUID_FROM_CREATE_CLIENT_API
+    # Set to true to enable mocking, false to disable
+    #    -> This is because the provided API from the base-url above throws a 404
+    mock-enabled: true
 
 # Configuration for calling CBS (Mocked)
 cbs:
@@ -35,22 +38,20 @@ retry:
 
 # Async thread pool (Spring Boot defaults are often sufficient)
 spring:
+  application:
+    name: credable-lms
   task:
     execution:
       pool:
         core-size: 5
         max-size: 10
       thread-name-prefix: async-exec-
-  # Optional: Ensure YAML is preferred if both files exist (usually automatic)
-  # config:
-  #  activate:
-  #    on-profile: default
 
 # Logging (Example - customize as needed)
 logging:
   level:
     root: INFO
-    io.credable.lms: DEBUG # More detailed logs for our app code
+    io.credable.lms: INFO
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.springframework.retry: INFO

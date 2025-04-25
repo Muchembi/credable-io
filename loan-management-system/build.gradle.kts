@@ -1,6 +1,8 @@
 plugins {
-    id("java")
-
+    id("project-base")
+    id("test-suites")
+    id("org.springframework.boot") version "3.3.9"
+    id("io.spring.dependency-management") version "1.1.4"
 }
 
 group = "io.credable.lms"
@@ -11,10 +13,19 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(platform(springboot.bom))
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.retry:spring-retry")
+
+    implementation(fasterxml.jackson.databind)
+
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.bootJar {
+    archiveFileName.set("lms.jar")
 }
